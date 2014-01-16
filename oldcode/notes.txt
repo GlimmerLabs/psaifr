@@ -1,0 +1,16 @@
+Okay, as I think about new directions.
+
+1. A simple book on problem solving and non-representational computer
+   art.  [Explain domain, demonstrate simple examples, etc.)  Add
+   challenges: Make a black square in the middle of the page.
+
+   a. Basics (the model, etc.)
+
+   b. Adding color
+
+   c. Adding time (n)
+
+   d. Transforming images (add r, g, and b which are "the current color")
+
+2. We need a "sign" function that takes negative numbers to -1, positive
+   numbers to 1, and zero to zero.

@@ -1,0 +1,15 @@
+; Some notes on genetic art using image-compute
+
+; Effectively three inputs to the component functions: x, y, n
+
+; We use the range -1.0 - 1.0 to represent most things (positions,
+; colors, etc.)  All functions take a value of that type as input
+; and return a value of that type as output
+
+
+(define 
+(define whatever
+  (lambda (rfun gfun bfun width height)
+    (let ((
+    (image-compute (lambda (x y)
+                     (rgb-new 
