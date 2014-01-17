@@ -1,8 +1,9 @@
 #!/usr/bin/perl
 
 # talk2handout
+# talk2slides
 #   Convert from the .talk hacky file format (see README.md) to a
-#   .html file for a handout.
+#   .html file for a handout or slides.
 
 # Notes:
 # o This is evil hacky code.
@@ -10,6 +11,7 @@
 #   Everything else is body.  Every head starts a new slide.
 
 # Format:
+#   : Section
 #   # Head
 #   ## Subhead
 #   * List item
@@ -36,11 +38,25 @@ my $startInfo = \&handoutStartInfo;
 my $endInfo = \&handoutEndInfo;
 my $startBody = \&handoutStartBody;
 my $endBody = \&handoutEndBody;
+my $formatSection = \&handoutFormatSection;
 my $formatHead = \&handoutFormatHead;
 my $formatSubHead = \&handoutFormatSubHead;
 my $formatListItem = \&handoutFormatListItem;
 my $formatImage = \&handoutFormatImage;
 my $formatText = \&handoutFormatText;
+
+if ($slides) {
+  $startItem = \&slidesStartItem;
+  $endItem = \&slidesEndItem;
+  $startInfo = \&slidesStartInfo;
+  $endInfo = \&slidesEndInfo;
+  $startBody = \&slidesStartBody;
+  $endBody = \&slidesEndBody;
+  $formatSection = \&slidesFormatSection;
+  $formatHead = \&slidesFormatHead;
+  $formatSubHead = \&slidesFormatSubHead;
+  $formatImage = \&slidesFormatImage;
+} 
 
 # +---------------+---------------------------------------------------
 # | Program State |
@@ -57,14 +73,12 @@ my $inBody = 0;         # Are we in the body of the slide?
 # +------+
 
 # Print the intial lines
-print <<"HEAD";
-<html>
-<head>
-  <title>$title</title>
-</head>
-<body>
-<table border>
-HEAD
+if ($slides) {
+  startSlides();
+}
+else {
+  startHandout();
+}
 
 # Process the input
 while ($line = <STDIN>) {
@@ -79,6 +93,14 @@ while ($line = <STDIN>) {
 
   if ($line eq "") {
   } # blank line
+
+  elsif (section($line)) {
+    # Clean up
+    if ($inInfo) { $endInfo->(); }
+    if ($inBody) { $endBody->(); }
+    if ($inItem) { $endItem->(); }
+    $formatSection->($data);
+  } # section
 
   elsif (head($line)) {
     # Clean up
@@ -143,15 +165,22 @@ if ($inItem) { $endItem->(); }
 if ($inBody) { $endBody->(); }
 
 # And end the document
-print <<"TAIL";
-</table>
-</body>
-</html>
-TAIL
+if ($slides) {
+  endSlides();
+}
+else {
+  endHandout();
+}
 
 # +-----------------+-------------------------------------------------
 # | Line Predicates |
 # +-----------------+
+
+sub section($)
+{
+  my $line = shift;
+  return $line =~ m/^: /;
+}
 
 sub head($)
 {
@@ -180,6 +209,27 @@ sub image($)
 # +--------------------+----------------------------------------------
 # | Handout Formatting |
 # +--------------------+
+
+sub startHandout()
+{
+  print <<"HANDOUT_HEAD";
+<html>
+<head>
+  <title>$title</title>
+</head>
+<body>
+<table border>
+HANDOUT_HEAD
+} # startHandout
+
+sub endHandout()
+{
+  print <<"HANDOUT_TAIL";
+</table>
+</body>
+</html>
+HANDOUT_TAIL
+} # endHandout
 
 sub handoutStartItem()
 {
@@ -229,6 +279,16 @@ sub handoutEndBody()
   $inBody = 0;
 }
 
+sub handoutFormatSection($)
+{
+  my $line = shift;
+  print<<"SECTION";
+  <tr>
+    <th colspan=2><strong><em>$line<\/em><\/strong></th>
+  </tr>
+SECTION
+} # handoutFormatSection
+
 sub handoutFormatHead($)
 {
   my $line = shift;
@@ -263,4 +323,81 @@ sub handoutFormatText($)
 # +------------------+------------------------------------------------
 # | Slide Formatting |
 # +------------------+
+
+sub startSlides()
+{
+  print <<"SLIDES_HEAD";
+<html>
+<head>
+  <title>$title</title>
+</head>
+<body>
+SLIDES_HEAD
+} # startSlides
+
+sub endSlides()
+{
+  print <<"SLIDES_TAIL";
+</body>
+</html>
+SLIDES_TAIL
+} # endSlides
+
+
+sub slidesStartItem()
+{
+  print "<tr valign=\"top\">\n";
+  $inItem = 1;
+}
+
+sub slidesEndItem()
+{
+  # '<HR class=PAGE-BREAK>
+  print "\n<HR CLASS=\"PAGE-BREAK\">\n";
+  $inItem = 0;
+}
+
+sub slidesStartInfo()
+{
+  $inInfo = 1;
+}
+
+sub slidesEndInfo()
+{
+  $inInfo = 0;
+}
+
+sub slidesStartBody()
+{
+  $inBody = 1;
+}
+
+sub slidesEndBody()
+{
+  print "  <\/td>\n";
+}
+
+sub slidesFormatSection($)
+{
+  my $line = shift;
+  print "<H1>$line<\/H1>\n";
+} # slidesFormatSection
+
+sub slidesFormatHead($)
+{
+  my $line = shift;
+  print "<H2>$line<\/H2>\n";
+}
+
+sub slidesFormatSubHead($)
+{
+  my $line = shift;
+  print "<H3>$line<\/H3>\n";
+}
+
+sub slidesFormatImage($)
+{
+  my $line = shift;
+  print "  <img src=\"large/$line-LARGE.png\"\/>\n";
+}
 
