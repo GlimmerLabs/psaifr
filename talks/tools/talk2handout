@@ -128,15 +128,15 @@ while ($line = <STDIN>) {
   } # if it's a subhead
 
   else {
-    # It should be something in the body.  An image, a list item, jsut text.
+    # It should be something in the body.  An image, a list item, just text.
 
     #  Clean up
-    if ($inHead) { $endHead->(); }
+    if ($inInfo) { $endInfo->(); }
     # Make sure that we're in an entry.
     if (!$inItem) {
       $startItem->();
-      $startHead->();
-      $endHead->();
+      $startInfo->();
+      $endInfo->();
     }
     # Make sure that we're in the body of the entry
     if (!$inBody) {
@@ -292,7 +292,7 @@ SECTION
 sub handoutFormatHead($)
 {
   my $line = shift;
-  print "  <strong>$line<\/strong>\n";
+  print "  <strong>$line<\/strong><br/>\n";
 }
 
 sub handoutFormatSubHead($)
@@ -310,7 +310,7 @@ sub handoutFormatListItem($)
 sub handoutFormatImage($)
 {
   my $line = shift;
-  print "  <img src=\"small/$line-SMALL.png\"\/>\n";
+  print "  <center><img src=\"small/$line-SMALL.png\"\/></center>\n";
 }
 
 sub handoutFormatText($)
@@ -398,6 +398,6 @@ sub slidesFormatSubHead($)
 sub slidesFormatImage($)
 {
   my $line = shift;
-  print "  <img src=\"large/$line-LARGE.png\"\/>\n";
+  print "<center><img src=\"large/$line-LARGE.png\"\/><\/center>\n";
 }
 
