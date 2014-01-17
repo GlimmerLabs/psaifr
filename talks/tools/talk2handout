@@ -1,0 +1,266 @@
+#!/usr/bin/perl
+
+# talk2handout
+#   Convert from the .talk hacky file format (see README.md) to a
+#   .html file for a handout.
+
+# Notes:
+# o This is evil hacky code.
+# o Items are fairly simple: There's a possible head and subhead.
+#   Everything else is body.  Every head starts a new slide.
+
+# Format:
+#   # Head
+#   ## Subhead
+#   * List item
+#   ! Image
+#   Text
+
+# +------------------+------------------------------------------------
+# | Primary Settings |
+# +------------------+
+
+my $title = shift;
+my $slides = $0;         # Are we building slides?
+$slides = $slides =~ m/2slide/;
+
+# +----------------------+--------------------------------------------
+# | Configure Formatting |
+# +----------------------+
+
+my $startItem = \&handoutStartItem;
+my $endItem = \&handoutEndItem;
+my $startList = \&handoutStartList;
+my $endList = \&handoutEndList;
+my $startInfo = \&handoutStartInfo;
+my $endInfo = \&handoutEndInfo;
+my $startBody = \&handoutStartBody;
+my $endBody = \&handoutEndBody;
+my $formatHead = \&handoutFormatHead;
+my $formatSubHead = \&handoutFormatSubHead;
+my $formatListItem = \&handoutFormatListItem;
+my $formatImage = \&handoutFormatImage;
+my $formatText = \&handoutFormatText;
+
+# +---------------+---------------------------------------------------
+# | Program State |
+# +---------------+
+
+my $inItem = 0;         # Are we in a slide?
+my $inList = 0;         # Are we in a list?
+my $inInfo = 0;         # Are we in the info part of the slide (head)
+my $inBody = 0;         # Are we in the body of the slide?
+
+
+# +------+------------------------------------------------------------
+# | Main |
+# +------+
+
+# Print the intial lines
+print <<"HEAD";
+<html>
+<head>
+  <title>$title</title>
+</head>
+<body>
+<table border>
+HEAD
+
+# Process the input
+while ($line = <STDIN>) {
+  chomp($line);
+
+  # $date contains the line without the initial symbology
+  my $data = $line;
+  $data =~ s/^[^ ]* //;
+
+  # If we're in a list and we don't have a list item, end the list
+  if ($inList && !listitem($line)) { $endList->(); }
+
+  if ($line eq "") {
+  } # blank line
+
+  elsif (head($line)) {
+    # Clean up
+    if ($inInfo) { $endInfo->(); }
+    if ($inBody) { $endBody->(); }
+    if ($inItem) { $endItem->(); }
+    # Start a new slide
+    $startItem->();
+    $startInfo->();
+    $formatHead->($data);
+  } # if it's a head.
+
+  elsif (subhead($line)) {
+    # Clean up
+    if ($inBody) { 
+      $endBody->();
+      $inBody = 0;
+      $endItem->();
+      $inItem = 0;
+    }
+    # Make sure we're in a head/entry
+    if (!$inItem) { $startItem->(); }
+    if (!$inInfo) { $startInfo->(); }
+    $formatSubHead->($data);
+  } # if it's a subhead
+
+  else {
+    # It should be something in the body.  An image, a list item, jsut text.
+
+    #  Clean up
+    if ($inHead) { $endHead->(); }
+    # Make sure that we're in an entry.
+    if (!$inItem) {
+      $startItem->();
+      $startHead->();
+      $endHead->();
+    }
+    # Make sure that we're in the body of the entry
+    if (!$inBody) {
+      $startBody->();
+    }
+
+    if (listitem($line)) {
+      if (!$inList) { $startList->(); }
+      $formatListItem->($data);
+    }
+
+    elsif (image($line)) {
+      $formatImage->($data);
+    }
+
+    else {      # It's text
+      $formatText->($data);
+    } # else (it's text)
+  } # else (it's in the body)
+} # while
+
+# Clean up
+if ($inList) { $endList->(); }
+if ($inInfo) { $endInfo->(); }
+if ($inItem) { $endItem->(); }
+if ($inBody) { $endBody->(); }
+
+# And end the document
+print <<"TAIL";
+</table>
+</body>
+</html>
+TAIL
+
+# +-----------------+-------------------------------------------------
+# | Line Predicates |
+# +-----------------+
+
+sub head($)
+{
+  my $line = shift;
+  return $line =~ m/^# /;
+} # head
+
+sub listitem($)
+{
+  my $line = shift;
+  return $line =~ m/^\* /;
+} # listitem
+
+sub subhead($)
+{
+  my $line = shift;
+  return $line =~ m/^## /;
+} # subhead
+
+sub image($)
+{
+  my $line = shift;
+  return $line =~ m/^! /;
+} # image
+
+# +--------------------+----------------------------------------------
+# | Handout Formatting |
+# +--------------------+
+
+sub handoutStartItem()
+{
+  print "<tr valign=\"top\">\n";
+  $inItem = 1;
+}
+
+sub handoutEndItem()
+{
+  print "<\/tr>\n";
+  $inItem = 0;
+}
+
+sub handoutStartList()
+{
+  print "<ul>\n";
+  $inList = 1;
+}
+
+sub handoutEndList()
+{
+  print "<\/ul>\n";
+  $inList = 0;
+}
+
+sub handoutStartInfo()
+{
+  print "  <td width=\"50%\">\n";
+  $inInfo = 1;
+}
+
+sub handoutEndInfo()
+{
+  print "  <\/td>\n";
+  $inInfo = 0;
+}
+
+sub handoutStartBody()
+{
+  print "  <td>\n";
+  $inBody = 1;
+}
+
+sub handoutEndBody()
+{
+  print "  <\/td>\n";
+  $inBody = 0;
+}
+
+sub handoutFormatHead($)
+{
+  my $line = shift;
+  print "  <strong>$line<\/strong>\n";
+}
+
+sub handoutFormatSubHead($)
+{
+  my $line = shift;
+  print "  <em>$line<\/em>\n";
+}
+
+sub handoutFormatListItem($)
+{
+  my $line = shift;
+  print "  <li>$line<\/li>\n";
+}
+
+sub handoutFormatImage($)
+{
+  my $line = shift;
+  print "  <img src=\"small/$line-SMALL.png\"\/>\n";
+}
+
+sub handoutFormatText($)
+{
+  my $line = shift;
+  print "  <p>$line<\/p>\n";
+}
+
+
+# +------------------+------------------------------------------------
+# | Slide Formatting |
+# +------------------+
+
