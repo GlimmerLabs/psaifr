@@ -1,6 +1,8 @@
 #lang racket
 (require psaifr/main)
 
+; NOTE: I should rewrite this whole thing as an association list.
+
 (define negative-one '(-1 "negative-one"))
 (define zero '(0 "zero"))
 (define one '(1 "one"))
@@ -11,6 +13,7 @@
 (define x-times-half '((* x 0.5) "x-times-half"))
 (define x-times-quarter '((* x 0.5) "x-times-quarter"))
 (define x-times-y '((* x y) "x-times-y"))
+(define negate-x-times-y '((negate (* x y)) "negate-x-times-y"))
 (define x-squared '((* x x) "x-squared"))
 (define MULTIPLICATION (list x-times-half x-times-quarter x-times-y x-squared))
   
@@ -78,3 +81,12 @@
 (define make-all-small
   (lambda ()
     (for-each make-small descriptions)))
+
+(define make-all-large
+  (lambda ()
+    (for-each make-large descriptions)))
+
+(define make-both
+  (lambda (description)
+    (make-small description)
+    (make-large description)))
