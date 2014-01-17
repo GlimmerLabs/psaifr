@@ -7,7 +7,7 @@ Developer Notes for psaifr/talks/overview
 
     1. Open GIMP.
     2. Start the Mediascript server.
-    3. Open make-slides.rkt in DrRacket.  
+    3. Open primer-images.rkt in DrRacket.  
     4. Click "Run"
     5. Evaluate `(make-all-small)`
     6. Evaluate `(make-all-large)
