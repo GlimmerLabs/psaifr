@@ -5,3 +5,7 @@
 # Ignore compiled Racket files
 *.zo
 *.dep
+
+# Ignore generated PostScript and PDF
+*.ps
+*.pdf
