@@ -43,24 +43,32 @@
 ! x-times-quarter
 
 # What is [x*y]?
+! one
 
-# Is it answer 1?
+# Is it A?
 ! x-plus-y
 
-# Or answer 2?
+# Or B?
 ! max-x-y
 
-# Or answer 3?
+# Or C?
 ! x-times-y
 
-# Or answer 4?
-! x-squared
+# Or D?
+! negate-x-times-y
 
-# This is the function [x+1/2]
+# This is the function [x]
+## Just in case you forgot
+! x
+
+# This is the function [x + 1/2]
 ! x-plus-half
 
-# This is the function [x+1].
+# This is the function [x + 1].
 ! x-plus-one
+
+# This is the function [x + -1/2]
+! x-minus-half
 
 # This is the function [x+y]
 ! x-plus-y
