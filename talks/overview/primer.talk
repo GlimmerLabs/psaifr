@@ -1,0 +1,89 @@
+# This is the world.
+! one
+
+# This is the function [-1].
+! negative-one
+
+# This is the function [0].
+! zero
+
+# This is the function [1].
+! one
+
+# This is the function [x].
+! x
+
+# This is the function [y].
+! y
+
+# That is ...
+* All values in the world are between -1 and 1.
+* Values are also colors (-1 black to 1 white).
+* Functions map each (x,y) coordinate to a value.
+* Functions == images.
+
+# This is the function [-x].
+! negative-x
+
+# This is the function [sign of y].
+! sign-y.
+
+# This is the function [sign of x].
+! sign-x.
+
+# This is the function [sign of -x].
+## Is it also [-(sign of x)?]
+! sign-negate-x.
+
+# This is the function [x*1/2].
+## It is also [1/2*x]
+! x-times-half
+
+# This is the function [x*1/4].
+! x-times-quarter
+
+# What is [x*y]?
+
+# Is it answer 1?
+! x-plus-y
+
+# Or answer 2?
+! max-x-y
+
+# Or answer 3?
+! x-times-y
+
+# Or answer 4?
+! x-times-x
+
+# This is the function [x+1/2]
+! x-plus-half
+
+# This is the function [x+1].
+! x-plus-one
+
+# This is the function [x+y]
+! x-plus-y
+
+# Addition
+* 1 is the largest number; 1 + 1/2 = 1.
+* -1 is the smallest number; -1 _ -1/2 = -1.
+* Can we think of alternatives?
+
+# This is the function [rotate x by 1]
+! x-rotate-1
+
+# This is the function [rotate x by 1/2]
+! x-rotate-half
+
+# This is the function [rotate x by y]
+! x-rotate-y
+
+# What is this function?
+! sign-x-plus-y
+
+# What is this function?
+! circle3
+
+# Does it help if we find this function first?
+! circle1
