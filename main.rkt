@@ -224,7 +224,7 @@
 
 (define psaifr-greyscale-large
   (lambda (fun fname)
-    (image-save (psaifr-greyscale-illustration fun 512 48) fname)))
+    (image-save (psaifr-greyscale-illustration fun 256 24) fname)))
 
 ;;; Procedure:
 ;;;   psaifr-color-image
