@@ -1,3 +1,7 @@
-# ignore editor files
+# Ignore editor files
 *~
 *.swp
+
+# Ignore compiled Racket files
+*.zo
+*.dep
