@@ -23,17 +23,17 @@
 * Functions == images.
 
 # This is the function [-x].
-! negative-x
+! negate-x
 
 # This is the function [sign of y].
-! sign-y.
+! sign-y
 
 # This is the function [sign of x].
-! sign-x.
+! sign-x
 
 # This is the function [sign of -x].
 ## Is it also [-(sign of x)?]
-! sign-negate-x.
+! sign-negate-x
 
 # This is the function [x*1/2].
 ## It is also [1/2*x]
@@ -54,7 +54,7 @@
 ! x-times-y
 
 # Or answer 4?
-! x-times-x
+! x-squared
 
 # This is the function [x+1/2]
 ! x-plus-half
@@ -71,7 +71,7 @@
 * Can we think of alternatives?
 
 # This is the function [rotate x by 1]
-! x-rotate-1
+! x-rotate-one
 
 # This is the function [rotate x by 1/2]
 ! x-rotate-half
