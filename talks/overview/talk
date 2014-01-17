@@ -1,0 +1,28 @@
+@html2ps {
+  option {
+    landscape: 1;
+    frame: 1;
+  }
+  frame { width: 3pt }
+}
+BODY {
+  font-family: Helvetica;
+  font-size: 32pt;
+}
+H1 { 
+  margin-top: 72pt;
+  font-size: 44pt;
+  text-align: center
+}
+H2 { 
+  font-size: 40pt;
+  text-align: center;
+}
+H3 { 
+  font-size: 36pt;
+  text-align: center;
+}
+H4 { font-size: 32pt }
+H5 { font-size: 28pt }
+H6 { font-size: 26pt }
+PRE { font-size: 24pt }
