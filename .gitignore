@@ -11,4 +11,4 @@
 *.pdf
 
 # Most HTML is generated, too
-.html
+*.html
