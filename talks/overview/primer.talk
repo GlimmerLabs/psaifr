@@ -1,46 +1,68 @@
+: Problem Solving, Abstract Images, and Functions: A Primer
+
 # This is the world.
 ! one
 
-# This is the function [-1].
+# This is [-1].
 ! negative-one
 
-# This is the function [0].
+# This is [0].
 ! zero
 
-# This is the function [1].
+# This is [1].
 ! one
 
-# This is the function [x].
+# This is [x].
 ! x
 
-# This is the function [y].
+# This is [y].
 ! y
 
 # That is ...
+* Functions == images.
 * All values in the world are between -1 and 1.
 * Values are also colors (-1 black to 1 white).
 * Functions map each (x,y) coordinate to a value.
-* Functions == images.
 
-# This is the function [-x].
+# This is [-x].
 ! negate-x
 
-# This is the function [sign of y].
+# This is [sign of y].
 ! sign-y
 
-# This is the function [sign of x].
+# This is [sign of x].
 ! sign-x
 
-# This is the function [sign of -x].
-## Is it also [-(sign of x)?]
+# This is [sign of -x].
+## Is it also [-[sign of x]]?
 ! sign-negate-x
 
-# This is the function [x*1/2].
+# This is [x*1/2].
 ## It is also [1/2*x]
 ! x-times-half
 
-# This is the function [x*1/4].
+# This is [x*1/4].
 ! x-times-quarter
+
+# This is [[sign of x] * 1/2]
+! half-sign-x
+
+# What is [[sign of x] * [sign of y]]?
+! one
+
+# This is [[sign of x] * [sign of y]]
+! sign-x-times-sign-y
+
+# That is
+* Multiplying by black flips a color
+* Multiplying by white keeps a color the same
+* Multiplying by grey makes things greyer
+
+# What is [[sign of x] * y]
+! one
+
+# This is [[sign of x] * y]
+! sign-x-times-y
 
 # What is [x*y]?
 ! one
@@ -57,41 +79,63 @@
 # Or D?
 ! negate-x-times-y
 
-# This is the function [x]
-## Just in case you forgot
-! x
-
-# This is the function [x + 1/2]
+# This is [x + 1/2]
 ! x-plus-half
 
-# This is the function [x + 1].
-! x-plus-one
+# This is [sign of [x + 1/2]]
+! sign-x-plus-half
 
-# This is the function [x + -1/2]
+# This is [sign of [x + 1/4]]
+! sign-x-plus-quarter
+
+# This is [x + -1/2]
 ! x-minus-half
 
-# This is the function [x+y]
+# This is [sign of [x + -1/2]]
+! sign-x-minus-half
+
+# This is [[sign of x] + [sign of y]]
+! sign-x-plus-sign-y
+
+# This is [x+y]
 ! x-plus-y
+
+# That is ...
+* Black + Black = Black
+* White + White = White
+* Grey + Grey = ...
 
 # Addition
 * 1 is the largest number; 1 + 1/2 = 1.
 * -1 is the smallest number; -1 _ -1/2 = -1.
 * Can we think of alternatives?
 
-# This is the function [rotate x by 1]
+# This is [rotate x by 1]
 ! x-rotate-one
 
-# This is the function [rotate x by 1/2]
+# This is [rotate x by 1/2]
 ! x-rotate-half
 
-# This is the function [rotate x by y]
+# This is [rotate x by y]
 ! x-rotate-y
 
-# What is this function?
+: What are these functions?
+
+# A Triangle
 ! sign-x-plus-y
 
-# What is this function?
+# A Circle
 ! circle3
 
-# Does it help if we find this function first?
-! circle1
+# A Line
+! vertical-line-1
+
+# Another Line
+! vertical-line-2
+
+# A Diagonal Line
+! diagonal-line-1
+
+# Something Else
+! half-circle
+

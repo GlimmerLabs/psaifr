@@ -1,45 +1,14 @@
-: Beyond The Basics
+# Making the images is easy
+; (define render
+;   (lambda (fun width height)
+;     (image-compute 
+;      (lambda (x y)
+;        (result2color 
+;         (fun (scale x width) (scale y height)))))))
 
-# More Features (1)
-* More functions: sine, cosine, max, min, etc.
-* Time-based function: second, minute, hour, day
-* Interactive functions: mouseX, mouseY, clickX, clickY
-
-# More Features (2)
-* Color (three functions, rather than one)
-* Transformations (?)
-* Genetic algorithms
-
-: The Project
-
-# Research Goal
-## Build a system that
-* Allows nonprogrammers to explore these issues (and learn problem solving)
-* Is easy and fun to use
-* Allows sharing of functions (both "source" and "image")
-* Is web-based [probably]
-
-# Design Tasks
-## Representing functions
-* In text form
-* In graphical form
-* Internally, for processing
-
-# Design Tasks
-## Features
-* What functions do we provide?
-* What other features? (see above)
-
-# Design Tasks
-## Presenting the system
-* Will the primer approach work?
-* What kinds of tasks should we give?
-* What are motivating examples?
-
-# Design Tasks
-## User Interface
-
-# Implementation Tasks
-* Rendering
-* 
+# Making the ecosystem is hard
+* Friendly language (visual)
+* Features (time, mouse, colors, ...)
 * Community
+* Primer
+* <em>And more ...</em>
