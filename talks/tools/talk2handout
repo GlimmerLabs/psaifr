@@ -16,6 +16,7 @@
 #   ## Subhead
 #   * List item
 #   ! Image
+#   ; code
 #   Text
 
 # +------------------+------------------------------------------------
@@ -38,12 +39,15 @@ my $startInfo = \&handoutStartInfo;
 my $endInfo = \&handoutEndInfo;
 my $startBody = \&handoutStartBody;
 my $endBody = \&handoutEndBody;
+my $startCode = \&handoutStartCode;
+my $endCode = \&handoutEndCode;
 my $formatSection = \&handoutFormatSection;
 my $formatHead = \&handoutFormatHead;
 my $formatSubHead = \&handoutFormatSubHead;
 my $formatListItem = \&handoutFormatListItem;
 my $formatImage = \&handoutFormatImage;
 my $formatText = \&handoutFormatText;
+my $formatCode = \&handoutFormatCode;
 
 if ($slides) {
   $startItem = \&slidesStartItem;
@@ -66,7 +70,8 @@ my $inItem = 0;         # Are we in a slide?
 my $inList = 0;         # Are we in a list?
 my $inInfo = 0;         # Are we in the info part of the slide (head)
 my $inBody = 0;         # Are we in the body of the slide?
-
+my $inCode = 0;         # Are we in preformatted code?
+my $printed = 0;
 
 # +------+------------------------------------------------------------
 # | Main |
@@ -90,6 +95,9 @@ while ($line = <STDIN>) {
 
   # If we're in a list and we don't have a list item, end the list
   if ($inList && !listitem($line)) { $endList->(); }
+
+  # If we're in  code and we don't have code, end the code
+  if ($inCode && !code($line)) { $endCode->(); }
 
   if ($line eq "") {
   } # blank line
@@ -152,10 +160,19 @@ while ($line = <STDIN>) {
       $formatImage->($data);
     }
 
+    elsif (code($line)) {
+      if (!$inCode) {
+        $startCode->();
+      }
+      $formatCode->($data);
+    }
+
     else {      # It's text
       $formatText->($data);
     } # else (it's text)
   } # else (it's in the body)
+
+  $printed = 1;
 } # while
 
 # Clean up
@@ -206,6 +223,12 @@ sub image($)
   return $line =~ m/^! /;
 } # image
 
+sub code($)
+{
+  my $line = shift;
+  return $line =~ m/^; /;
+} # code
+
 # +--------------------+----------------------------------------------
 # | Handout Formatting |
 # +--------------------+
@@ -218,7 +241,7 @@ sub startHandout()
   <title>$title</title>
 </head>
 <body>
-<table border width="100%">
+<table width="100%">
 HANDOUT_HEAD
 } # startHandout
 
@@ -233,13 +256,14 @@ HANDOUT_TAIL
 
 sub handoutStartItem()
 {
-  print "<tr valign=\"top\">\n";
+  # print "<tr valign=\"top\">\n";
+  print "<tr>\n";
   $inItem = 1;
 }
 
 sub handoutEndItem()
 {
-  print "<\/tr>\n";
+  print "</tr>\n";
   $inItem = 0;
 }
 
@@ -251,32 +275,41 @@ sub handoutStartList()
 
 sub handoutEndList()
 {
-  print "<\/ul>\n";
+  print "</ul>\n";
   $inList = 0;
+}
+
+sub handoutStartCode()
+{
+  print "<pre>\n";
+  $inCode = 1;
+}
+
+sub handoutEndCode()
+{
+  print "</pre>\n";
+  $inCode = 0;
 }
 
 sub handoutStartInfo()
 {
-  print "  <td width=\"50%\">\n";
+  print "  <td width=\"40%\">\n";
   $inInfo = 1;
 }
 
 sub handoutEndInfo()
 {
-  print "  <\/td>\n";
+  print "  </td>\n";
   $inInfo = 0;
 }
 
 sub handoutStartBody()
 {
   print <<"BODY";
+  <td width="5%">
+    <img src="line.png"/>
+  </td>
   <td>
-    <table width="90%">
-      <tr>
-        <td>
-          <img src="line.png"/>
-        </td>
-        <td>
 BODY
   $inBody = 1;
 }
@@ -284,9 +317,6 @@ BODY
 sub handoutEndBody()
 {
   print <<"ENDBODY";
-        </td>
-      </tr>
-    </table>
   </td>
 ENDBODY
   $inBody = 0;
@@ -295,9 +325,12 @@ ENDBODY
 sub handoutFormatSection($)
 {
   my $line = shift;
+  if ($printed) {
+    <HR CLASS="PAGE-BREAK">
+  }
   print<<"SECTION";
   <tr>
-    <th colspan=2><strong><em>$line<\/em><\/strong></th>
+    <th colspan=3><strong><em>$line</em></strong></th>
   </tr>
 SECTION
 } # handoutFormatSection
@@ -305,31 +338,37 @@ SECTION
 sub handoutFormatHead($)
 {
   my $line = shift;
-  print "  <strong>$line<\/strong><br/>\n";
+  print "  <strong>$line</strong><br/>\n";
 }
 
 sub handoutFormatSubHead($)
 {
   my $line = shift;
-  print "  <em>$line<\/em>\n";
+  print "  <em>$line</em>\n";
 }
 
 sub handoutFormatListItem($)
 {
   my $line = shift;
-  print "  <li>$line<\/li>\n";
+  print "  <li>$line</li>\n";
 }
 
 sub handoutFormatImage($)
 {
   my $line = shift;
-  print "  <center><img src=\"small/$line-SMALL.png\"\/></center>\n";
+  print "  <img src=\"small/$line-SMALL.png\"/>\n";
 }
 
 sub handoutFormatText($)
 {
   my $line = shift;
-  print "  <p>$line<\/p>\n";
+  print "  <p>$line</p>\n";
+}
+
+sub handoutFormatCode($)
+{
+  my $line = shift;
+  print "$line\n";
 }
 
 
@@ -359,13 +398,11 @@ SLIDES_TAIL
 
 sub slidesStartItem()
 {
-  print "<tr valign=\"top\">\n";
   $inItem = 1;
 }
 
 sub slidesEndItem()
 {
-  # '<HR class=PAGE-BREAK>
   print "\n<HR CLASS=\"PAGE-BREAK\">\n";
   $inItem = 0;
 }
@@ -387,30 +424,31 @@ sub slidesStartBody()
 
 sub slidesEndBody()
 {
-  print "  <\/td>\n";
+  $inBody = 0;
 }
 
 sub slidesFormatSection($)
 {
   my $line = shift;
-  print "<H1>$line<\/H1>\n";
+  print "<H1>&nbsp;<br/>&nbsp;<br/>$line</H1>\n";
+  print "\n<HR CLASS=\"PAGE-BREAK\">\n";
 } # slidesFormatSection
 
 sub slidesFormatHead($)
 {
   my $line = shift;
-  print "<H2>$line<\/H2>\n";
+  print "<H2>$line</H2>\n";
 }
 
 sub slidesFormatSubHead($)
 {
   my $line = shift;
-  print "<H3>$line<\/H3>\n";
+  # print "<H3>$line</H3>\n";
 }
 
 sub slidesFormatImage($)
 {
   my $line = shift;
-  print "<center><img src=\"large/$line-LARGE.png\"\/><\/center>\n";
+  print "<center><img src=\"large/$line-LARGE.png\"/></center>\n";
 }
 
