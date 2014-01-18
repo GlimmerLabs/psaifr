@@ -218,7 +218,7 @@ sub startHandout()
   <title>$title</title>
 </head>
 <body>
-<table border>
+<table border width="100%">
 HANDOUT_HEAD
 } # startHandout
 
@@ -269,14 +269,26 @@ sub handoutEndInfo()
 
 sub handoutStartBody()
 {
-  print "  <td>\n";
-  print "    <image src=\"line.png\"/>\n";
+  print <<"BODY";
+  <td>
+    <table width="90%">
+      <tr>
+        <td>
+          <img src="line.png"/>
+        </td>
+        <td>
+BODY
   $inBody = 1;
 }
 
 sub handoutEndBody()
 {
-  print "  <\/td>\n";
+  print <<"ENDBODY";
+        </td>
+      </tr>
+    </table>
+  </td>
+ENDBODY
   $inBody = 0;
 }
 
