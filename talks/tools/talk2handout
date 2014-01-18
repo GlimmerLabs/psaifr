@@ -270,6 +270,7 @@ sub handoutEndInfo()
 sub handoutStartBody()
 {
   print "  <td>\n";
+  print "    <image src=\"line.png\"/>\n";
   $inBody = 1;
 }
 
