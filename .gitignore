@@ -9,3 +9,6 @@
 # Ignore generated PostScript and PDF
 *.ps
 *.pdf
+
+# Most HTML is generated, too
+.html
