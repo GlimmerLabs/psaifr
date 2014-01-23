@@ -1,6 +1,25 @@
 #lang racket
 (require psaifr/main)
 
+; +-------+-----------------------------------------------------------
+; ; Notes |
+; +-------+
+
+; This is hacked-together code intended for making the various 
+; illustrations I need for the PSAIF primer.
+
+; I found that I was reusing the Scheme name for a function/image
+; and the file name.  Hence, there's a little hack in which I represent
+; each "description" as a symbol that names a function.  Since I might
+; change that hack, we have procedures that extract a string and that
+; extract the "code".
+
+; +--------------+----------------------------------------------------
+; ; Descriptions |
+; +--------------+
+
+; Some basic functions
+
 (define negative-one '-1)
 (define zero '0)
 (define one '1)
@@ -16,6 +35,8 @@
         'negate-x
         'sign-x 'sign-y
         'sign-negate-x))
+
+; Some exmaples of multiplication
 
 (define x-times-half '(* x 0.5))
 (define x-times-quarter '(* x 0.5))
@@ -104,26 +125,61 @@
   (append BASIC MULTIPLICATION SIGN ADDITION ROTATION 
           COMPLEX CIRCLES LINES TRIG))
 
+; Things that should also be shown as a unary function
+(define unary
+  (list 'sign-x))
+
+(define binary
+  (list 'sign-x-times-y 'sign-x-times-sign-y 'sign-x-plus-sign-y 'x-times-y))
+          
+; +----------------------+--------------------------------------------
+; | Making Illustrations |
+; +----------------------+
+
+;;; Procedure:
+;;;   description->fname
+;;; Parameters:
+;;;   description, a function/image description (see notes)
+;;; Purpose:
+;;;   Get a simple file name associated with the description
+;;; Produces:
+;;;   fname, a string
 (define description->fname
   (lambda (description)
     (symbol->string description)))
 
+;;; Procedure:
+;;;   description->code
+;;; Parameters:
+;;;   description, a function/image description (see notes)
+;;; Purpose:
+;;;   Get the code associated with a description
+;;; Produces:
+;;;   code, an s-expression
 (define description->code
   (lambda (description)
     (eval description)))
 
+(define preliminary-message
+  (lambda (fname)
+    (display "Creating ")
+    (display fname)
+    (display " . . . ")
+    (flush-output)))
+
+(define ending-message
+  (lambda (fname)
+    (display "Done.")
+    (newline)))
+    
 (define make-small
   (lambda (description)
     (let ((fname (string-append "/tmp/" 
                                 (description->fname description) 
                                 "-SMALL.png")))
-      (display "Creating ")
-      (display fname)
-      (display " . . . ")
-      (flush-output)
+      (preliminary-message)
       (psaifr-greyscale-small (description->code description) fname)
-      (display "Done.")
-      (newline))))
+      (ending-message))))
 
 (define make-large
   (lambda (description)
@@ -137,6 +193,37 @@
       (psaifr-greyscale-large (description->code description) fname)
       (display "Done.")
       (newline))))
+
+(define make-unary-small
+  (lambda (description)
+    (let ([fname (string-append "/tmp/unary-"
+                                (description->fname description)
+                                "-SMALL.png")]
+          [code (description->code description)])
+      (preliminary-message fname)
+      (unary-illustration-small fname (car code) (cdr code))
+      (ending-message fname))))
+
+(define make-unary-large
+  (lambda (description)
+    (let ([fname (string-append "/tmp/unary-"
+                                (description->fname description)
+                                "-LARGE.png")]
+          [code (description->code description)])
+      (preliminary-message fname)
+      (unary-illustration-large fname (car code) (cadr code))
+      (ending-message fname))))
+
+(define make-binary-large
+  (lambda (description)
+    (let ([fname (string-append "/tmp/binary-"
+                                (description->fname description)
+                                "-LARGE.png")]
+          [code (description->code description)])
+      (preliminary-message fname)
+      (binary-illustration-large fname (car code) (cadr code) (caddr code))
+      (ending-message fname))))
+
 
 (define make-all-small
   (lambda ()

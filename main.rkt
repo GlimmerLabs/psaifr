@@ -226,6 +226,165 @@
   (lambda (fun fname)
     (image-save (psaifr-greyscale-illustration fun 256 24) fname)))
 
+;;; Procedures:
+;;;   psaifr-greyscale-unary-small
+;;; Parameters:
+;;;   trans, a symbol giving a function name
+;;;   fun, an s expression giving an image
+;;; Purpose:
+;;;   Create a short illustration of a transformation
+;;; Produces:
+;;;   illustration, an image id
+(define psaifr-greyscale-unary-small
+  (lambda (trans fun)
+    (context-set-font-name! "Monospace")
+    (context-set-font-size! 12)
+    (let* ((width 300)
+           (height 200)
+           (text (value->string trans))
+           (tw (text-width text))
+           (illustration (image-new width height))
+           (source (psaifr-greyscale-illustration fun 60 7))
+           (result (psaifr-greyscale-illustration (list trans fun) 60 7))
+           (w (image-width source))
+           (h (image-height source)))
+      (context-set-font-name! "Monospace")
+      (context-set-font-size! 12)
+      (image-display-text! illustration 
+                           (value->string trans)
+                           25
+                           (/ height 2)
+                           ALIGN-LEFT
+                           ALIGN-CENTER)
+      (image-copy-paste-block! source 0 0 
+                               illustration 60 (/ (- height h) 2)
+                               w h)
+      (image-display-text! illustration 
+                           "="
+                           175
+                           (/ height 2)
+                           ALIGN-LEFT
+                           ALIGN-CENTER)
+      (image-copy-paste-block! result 0 0 
+                               illustration 200 (/ (- height h) 2)
+                               w h)
+
+      illustration)))
+
+(define psaifr-greyscale-unary-large
+  (lambda (trans fun)
+    (context-set-font-name! "Monospace")
+    (context-set-font-size! 32)
+    (let* ((width 800)
+           (height 400)
+           (text (value->string trans))
+           (tw (text-width text))
+           (illustration (image-new width height))
+           (source (psaifr-greyscale-illustration fun 200 15))
+           (result (psaifr-greyscale-illustration (list trans fun) 200 15))
+           (w (image-width source))
+           (h (image-height source)))
+      (context-set-font-name! "Monospace")
+      (context-set-font-size! 32)
+      (image-copy-paste-block! source 0 0 
+                               illustration 140 (/ (- height h) 2)
+                               w h)
+      (image-copy-paste-block! result 0 0 
+                               illustration 520 (/ (- height h) 2)
+                               w h)
+      (image-display-text! illustration 
+                           (value->string trans)
+                           40
+                           (/ height 2)
+                           ALIGN-LEFT
+                           ALIGN-CENTER)
+      (image-display-text! illustration 
+                           "="
+                           450
+                           (/ height 2)
+                           ALIGN-LEFT
+                           ALIGN-CENTER)
+      illustration)))
+
+;;; Procedures:
+;;;   psaifr-greyscale-triptych-large
+;;; Parameters:
+;;;   left, an s expression that gives an image
+;;;   note1, a string
+;;;   middle, an s expression that gives an image
+;;;   note2, a string
+;;;   right, an s expression that gives an image
+;;; Purpose:
+;;;   Creates a kind of tryptych, with the parts separate by lnote and rnote
+;;; Philosophy:
+;;;   Intended to support showing binary functions and other such issues
+;;; Plans:
+;;;   Should be designed to take into account the size of the generated images,
+;;;   rather than my quick hacks to get things working.
+(define psaifr-greyscale-triptych-large
+  (lambda (left note1 middle note2 right)
+    (let* ((width 850)     ; The width of the image we're creating
+           (height 400)    ; The height of the image we're creating
+           (size 200)      ; The size of the component images
+           (fontsize 12)   ; The font size of the image we're creating
+           (illustration (image-new width height))
+           (leftimg (psaifr-greyscale-illustration left size fontsize))
+           (midimg (psaifr-greyscale-illustration middle size fontsize))
+           (rightimg (psaifr-greyscale-illustration right size fontsize))
+           (w (image-width leftimg))
+           (h (image-height leftimg)))
+      (context-set-font-name! "Monospace")
+      (context-set-font-size! 32)
+      (image-copy-paste-block! leftimg 0 0 
+                               illustration 0 (/ (- height h) 2)
+                               w h)
+      (image-copy-paste-block! midimg 0 0 
+                               illustration (/ (- width w) 2) (/ (- height h) 2)
+                               w h)
+      (image-copy-paste-block! rightimg 0 0 
+                               illustration (- width w) (/ (- height h) 2)
+                               w h)
+      (image-display-text! illustration 
+                           note1
+                           (* width 1/3)
+                           (* height 15/32)
+                           ALIGN-CENTER
+                           ALIGN-CENTER)
+      (image-display-text! illustration 
+                           note2
+                           (* width 2/3)
+                           (* height 15/32)
+                           ALIGN-CENTER
+                           ALIGN-CENTER)
+      illustration)))
+;;; Procedures:
+;;;   psaifr-greyscale-binary-large
+;;; Parameters:
+;;;   trans, a symbol giving a function name
+;;;   left, an s expression giving an image
+;;;   right, an s expression giving an image
+;;; Purpose:
+;;;   Create a short illustration of a transformation
+;;; Produces:
+;;;   illustration, an image id
+;;; Plans:
+(define psaifr-greyscale-binary-large
+  (lambda (trans left right . rest)
+    (let* ((fun (if (null? rest) (list trans left right) (car rest))))
+      (psaifr-greyscale-triptych-large left (symbol->string trans) right "=" fun))))
+
+(define unary-illustration-small
+  (lambda (fname . stuff)
+    (image-save (apply psaifr-greyscale-unary-small stuff) fname)))
+
+(define unary-illustration-large
+  (lambda (fname . stuff)
+    (image-save (apply psaifr-greyscale-unary-large stuff) fname)))
+
+(define binary-illustration-large
+  (lambda (fname . stuff)
+    (image-save (apply psaifr-greyscale-binary-large stuff) fname)))
+
 ;;; Procedure:
 ;;;   psaifr-color-image
 ;;; Parameters:

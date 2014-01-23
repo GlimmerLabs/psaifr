@@ -31,3 +31,9 @@ slides.html: intro.talk primer.talk followup.talk
 
 slides.ps: slides.html
 	html2ps -D -f talk -o $@ $<
+
+short.html: short.talk
+	cat $^ | ../tools/talk2slides > $@
+
+short.ps: short.html
+	html2ps -D -f talk -o $@ $<

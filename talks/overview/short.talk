@@ -1,0 +1,40 @@
+: Problem Solving, Abstract Images, and Functions: A Summmary
+
+# This is the world.
+! one
+
+# This is [-1].
+! negative-one
+
+# This is [0].
+! zero
+
+# This is [1].
+! one
+
+# This is [x].
+! x
+
+# This is [y].
+! y
+
+# That is ...
+* Functions == images.
+* All values in the world are between -1 and 1.
+* Values are also colors (-1 black to 1 white).
+* Functions map each (x,y) coordinate to a value.
+
+# This is [sign of x]
+! unary-sign-x
+
+# This is [[sign of x] * [sign of y]]
+! binary-sign-x-times-sign-y
+
+# This is [[sign of x] + [sign of y]]
+! binary-sign-x-plus-sign-y
+
+# This is [[sign of x] * y]
+! binary-sign-x-times-y
+
+# This is [x * y]
+! binary-x-times-y
