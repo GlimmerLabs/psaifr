@@ -28,14 +28,14 @@
 ! negate-x
 
 # This is [sign of y].
-! sign-y
+! unary-sign-y
 
 # This is [sign of x].
-! sign-x
+! unary-sign-x
 
 # This is [sign of -x].
 ## Is it also [-[sign of x]]?
-! sign-negate-x
+! unary-sign-negate-x
 
 # This is [x*1/2].
 ## It is also [1/2*x]
@@ -47,9 +47,6 @@
 # This is [[sign of x] * 1/2]
 ! half-sign-x
 
-# What is [[sign of x] * [sign of y]]?
-! one
-
 # This is [[sign of x] * [sign of y]]
 ! sign-x-times-sign-y
 
@@ -59,13 +56,13 @@
 * Multiplying by grey makes things greyer
 
 # What is [[sign of x] * y]
-! one
+! binary-sign-x-times-y-question
 
 # This is [[sign of x] * y]
-! sign-x-times-y
+! binary-sign-x-times-y
 
 # What is [x*y]?
-! one
+! binary-x-times-y-question
 
 # Is it A?
 ! x-plus-y
@@ -79,14 +76,17 @@
 # Or D?
 ! negate-x-times-y
 
+# This is [x*y]
+! binary-x-times-y
+
 # This is [x + 1/2]
 ! x-plus-half
 
 # This is [sign of [x + 1/2]]
-! sign-x-plus-half
+! unary-sign-x-plus-half
 
 # This is [sign of [x + 1/4]]
-! sign-x-plus-quarter
+! unary-sign-x-plus-quarter
 
 # This is [x + -1/2]
 ! x-minus-half
@@ -95,10 +95,10 @@
 ! sign-x-minus-half
 
 # This is [[sign of x] + [sign of y]]
-! sign-x-plus-sign-y
+! binary-sign-x-plus-sign-y
 
 # This is [x+y]
-! x-plus-y
+! binary-x-plus-y
 
 # That is ...
 * Black + Black = Black
