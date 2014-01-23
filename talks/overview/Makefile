@@ -4,10 +4,10 @@
 # +-----------------------+
 
 %.html: %.talk
-	cat $^ | ../tools/talk2handout > $@
+	cat $^ | ../tools/talk2slides > $@
 
 %.ps: %.html
-	html2ps -D -o $*.ps $<
+	html2ps -D -f talk -o $*.ps $<
 
 %.pdf: %.ps
 	ps2pdf $<  $*.pdf
