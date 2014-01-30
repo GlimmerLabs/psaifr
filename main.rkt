@@ -13,6 +13,11 @@
 ;   Some code for dealing with the PSAIF (Problem Solving, Abstract
 ;   Images, and Functions) model in Racket.
 
+; HACK!  (Temporary)
+(define image-copy-paste-block!
+  (lambda params
+    params))
+
 ; +-------+-----------------------------------------------------------
 ; | Notes |
 ; +-------+
