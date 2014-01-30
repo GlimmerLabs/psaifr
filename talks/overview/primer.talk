@@ -15,6 +15,9 @@
 # This is [x].
 ! x
 
+# This is [-x].
+! negate-x
+
 # This is [y].
 ! y
 
@@ -23,9 +26,6 @@
 * All values in the world are between -1 and 1.
 * Values are also colors (-1 black to 1 white).
 * Functions map each (x,y) coordinate to a value.
-
-# This is [-x].
-! negate-x
 
 # This is [sign of y].
 ! unary-sign-y
@@ -48,7 +48,7 @@
 ! half-sign-x
 
 # This is [[sign of x] * [sign of y]]
-! sign-x-times-sign-y
+! binary-sign-x-times-sign-y
 
 # That is
 * Multiplying by black flips a color
